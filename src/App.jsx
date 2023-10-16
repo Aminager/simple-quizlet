@@ -12,14 +12,27 @@ function App() {
   const [question, setQuestion] = useState(questions[0]);
   const [answer, setAnswer] = useState(answers[0]);
   const [text, setText] = useState(question);
+  const [selected, setSelected] = useState([]);
 
   const switchLang = () => {
     setLang((old) => !old);
   };
 
+  const handleReset = () => {
+    setSelected([]);
+  };
+
+  const getRandNumberThatHasNotBeenSelected = () => {
+    let number = Math.floor(Math.random() * questionList["questions"].length);
+    while (selected.includes(number)) {
+      number = Math.floor(Math.random() * questionList["questions"].length);
+    }
+    setSelected((old) => [...old, number]);
+    return number;
+  };
+
   const handleNext = () => {
-    const next = Math.floor(Math.random() * questionList["questions"].length);
-    console.log(next);
+    const next = getRandNumberThatHasNotBeenSelected();
     setQuestion(
       lang ? questionList["questions"][next] : questionList["answers"][next]
     );
@@ -37,6 +50,12 @@ function App() {
         <span>
           Current language: {lang ? "Dansk -> svenska" : "Svenska -> dansk"}
         </span>
+        <button
+          onClick={handleReset}
+          className="rounded-lg border-black border-2"
+        >
+          Reset list
+        </button>
         <button
           onClick={switchLang}
           className="rounded-lg border-black border-2"
